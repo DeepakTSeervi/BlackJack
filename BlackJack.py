@@ -18,18 +18,19 @@ class Bank():
         self.balance = balance
     
     def deposit(self, deposit_amount):
-        self.balance = self.balance + deposit_amount        
+        self.balance = self.balance + deposit_amount
+
     
     def withdraw(self, withdraw_amount):
         if self.balance < withdraw_amount:
             return -1
         else:
-            self.balance = self.balance + withdraw_amount  
-            return 0
+            self.balance = self.balance - withdraw_amount  
+            return self.balance
 
     def __str__(self):
         return f"{self.name} has {self.balance} coins"
-		
+        
 if __name__ == '__main__':
     print("-----**WELCOME**-----")
     print("lets play Blackjack")
@@ -38,10 +39,11 @@ if __name__ == '__main__':
     name = input("Enter your name : ")
     balance = input("Enter the amount you want to deposit : ")
     
-    # list for human player
+    # list of cards for human player
     player_cards = []
-    total = 0
-    # list for computer
+    player_total, computer_total = 0, 0
+    turn = 0
+    # list of cards for computer
     computer_cards = []
     
     # creating an object for each player
@@ -50,40 +52,98 @@ if __name__ == '__main__':
     
     # displaying the cards of human player
     print(name + ' has the following cards :')
-    
-    # getting random cards from random_card()
+
+    # getting two random cards from random_card() for player
     player_cards.append(random_card())
     player_cards.append(random_card())
 
-    computer
+    # getting two random cards from random_card() for computer
+    computer_cards.append(random_card())
+    computer_cards.append(random_card())
 
 
+    betting_amount = input('Enter the amount you want to bet : ')
     while True:
-        
-        # printing all the cards of players
-        for x in player_cards:
-            print(player_cards)
+        """
+        This section is for Player
+        """
+        if turn%2 == 0:
+            # printing all the cards of players
+            for x in player_cards:
+                print(player_cards)
 
-            # checking the best condition for picking 1 or 10 in the occurance of ace
-            if x == 'ace' and total + cards[x][1] >= 21:
-                total = total + cards[x][0]
-            elif x == 'ace':
-                total = total + cards[x][1]
+                # checking the best condition for picking 1 or 10 in the occurance of ace
+                if x == 'ace' and player_total + cards[x][1] >= 21:
+                    player_total = player_total + cards[x][0]
+                elif x == 'ace':
+                    player_total = player_total + cards[x][1]
+                else:
+                    player_total = player_total + cards[x]
+
+
+            """
+            BlackJack yet to complete------------
+            """
+            if player_total >= 21:
+                print(f"{name} loses :) \nComputer wins\n{name} total goes to {player_total}\nComputer total goes to {computer_total}")
+                player.withdraw(betting_amount)
+                computer.deposit(betting_amount)
+                print(player, '\n', computer)
+                
+                replay = input('Do you want to continue the game?(y/n)  ')
+                if replay == 'y':
+                    break
+                else:
+                    exit()
+
             else:
-                total = total + cards[x]
+                print(f"{player_total} is your total")
+                descision = input("Hit or Stay?(h/s)")
 
+                # if player hits
+                if descision == 'h':
+                    player_cards.append(random_card())
+                else:
+                    turn += 1
 
-        if total >= 21:
-            print(f"You lose :( \nComputer wins\nYour total goes to {total}")
-            break
-        else:
-            print(f"{total} is your total")
-            descision = input("Hit or Stay?(h/s)")
-            if descision == 'h':
-                player_cards.append(random_card())
+        """
+        This section is for Computer
+        """
+        if turn%2 != 0:
+            print('Computer has the following cards :')
+            # printing all the cards of players
+            for x in computer_cards:
+                print(computer_cards)
 
+                # checking the best condition for picking 1 or 10 in the occurance of ace
+                if x == 'ace' and computer_total + cards[x][1] >= 21:
+                    computer_total = computer_total + cards[x][0]
+                elif x == 'ace':
+                    computer_total = computer_total + cards[x][1]
+                else:
+                    computer_total = computer_total + cards[x]
+
+            """
+            BlackJack yet to complete------------
+            """
+            if computer_total > 21:
+                print(f"Computer loses :( \n{name} wins\n{name} total goes to {player_total}\nComputer total goes to {computer_total}")
+                player.deposit(betting_amount)
+                computer.withdraw(betting_amount)
+                print(player, '\n', computer)
+                
             else:
-                break
+                print(f"{computer_total} is computer's total")
+
+
+                if player_total > computer_total:
+                # if computer hits 
+                    player_cards.append(random_card())
+                else:
+                    turn += 1
+                
+
+                
 
             
 
